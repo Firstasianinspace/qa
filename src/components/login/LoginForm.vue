@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 import { useUser } from "@/stores/user";
 import { useRouter } from "vue-router";

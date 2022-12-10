@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
@@ -53,13 +53,13 @@ const onReset = () => {
   email.value = "";
 };
 
-const isValidPhone = (val: string) => {
+const isValidPhone = (val) => {
   const phonePattern =
     /(\+7|8)(\s?)([-(]?)((\d{3})([-)]?)(\s?)(\d{3})([\s-]?)(\d{2})([\s-]?)(\d{2})|(\d{4})([-)]?)(\s?)(\d{2})([\s-]?)(\d{2})([\s-]?)(\d{2}))/g;
   return phonePattern.test(val) || "Некорректный номер телефона";
 };
 
-const isValidEmail = (val: string) => {
+const isValidEmail = (val) => {
   const emailPattern =
     /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
   return emailPattern.test(val) || "Некорректный email";

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useCatalog } from "@/stores/catalog";
