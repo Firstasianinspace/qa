@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import TheHeader from "@/components/header/TheHeader.vue";
-import ModalCollection from "@/components/ModalCollection.vue";
 import DrawerCollection from "@/components/DrawerCollection.vue";
 </script>
 
@@ -8,7 +7,6 @@ import DrawerCollection from "@/components/DrawerCollection.vue";
   <q-layout>
     <TheHeader />
     <RouterView />
-    <ModalCollection />
     <DrawerCollection />
   </q-layout>
 </template>
