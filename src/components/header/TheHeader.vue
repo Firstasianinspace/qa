@@ -11,8 +11,8 @@ const storeLogo = computed(() => HEADER_LOGO_URL);
     <div class="header-inner">
       <div class="header-info">
         <router-link to="/">EN</router-link>
-        <router-link to="/">Lookbook</router-link>
-        <router-link to="/">Editorial</router-link>
+        <!-- <router-link to="/">Lookbook</router-link>
+        <router-link to="/">Editorial</router-link> -->
       </div>
       <router-link class="header-logo" to="/catalog">
         <img :src="storeLogo" :alt="'storeName'" />
