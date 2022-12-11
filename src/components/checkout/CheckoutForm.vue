@@ -1,9 +1,7 @@
 <script setup>
-import axios from "axios";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { ionCheckmarkDoneOutline } from "@quasar/extras/ionicons-v6";
-import "vue-dadata/dist/style.css";
 
 const $q = useQuasar();
 
@@ -76,13 +74,6 @@ const onSubmit = () => {
   });
   emit("handleClick");
 };
-
-onMounted(async () => {
-  const data = axios.get(
-    "https://gist.github.com/gorborukov/0722a93c35dfba96337b"
-  );
-  console.log(data);
-});
 </script>
 
 <template>
@@ -117,7 +108,7 @@ onMounted(async () => {
     <q-input
       outlined
       color="dark"
-      v-model="address"
+      v-model="city"
       label="Город *"
       lazy-rules
       :rules="[(val) => (val && val.length > 0) || 'Обязательное поле']"

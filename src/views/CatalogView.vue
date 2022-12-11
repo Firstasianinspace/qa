@@ -22,7 +22,7 @@ const catalogCardComponent = computed(
 
 const catalogStore = useCatalog();
 const { products } = storeToRefs(catalogStore);
-const { getProducts, getCategories } = catalogStore;
+const { getProducts, getCategories, getBrands } = catalogStore;
 
 const selectedCategories = ref("");
 const minPriceRange = ref(null);
@@ -42,6 +42,7 @@ const filteredProducts = computed(() => {
 });
 
 const filteredProductsRange = computed(() => {
+  if (maxPriceRange.value === 0) return products.value;
   return filteredProducts.value.filter(
     (s) =>
       s.currentPrice >= minPriceRange.value &&
@@ -80,10 +81,11 @@ const setMaximum = (value) => {
 onMounted(() => {
   getProducts();
   getCategories();
+  getBrands();
   setTimeout(() => {
     minPriceRange.value = minPrice.value;
     maxPriceRange.value = maxPrice.value;
-  }, 200);
+  }, 500);
 });
 </script>
 <template>

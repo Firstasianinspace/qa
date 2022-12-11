@@ -2,15 +2,18 @@ import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
 import type { IProduct } from "@/typings/product";
 import type { ICategory } from "@/typings/categories";
+import type { IBrand } from "@/typings/brands";
 
 //* using option store syntax
 export const useCatalog = defineStore("catalog", {
   state: () => {
     const products: IProduct[] = [];
     const categories: ICategory[] = [];
+    const brands: IBrand[] = [];
     return {
       products,
       categories,
+      brands,
     };
   },
   getters: {
@@ -57,6 +60,14 @@ export const useCatalog = defineStore("catalog", {
       try {
         const { data } = await BaseApi.get("/api/categories?limit=50");
         this.categories = data.categories;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getBrands() {
+      try {
+        const { data } = await BaseApi.get("/api/brands?limit=50");
+        this.brands = data.brands;
       } catch (e) {
         console.log(e);
       }

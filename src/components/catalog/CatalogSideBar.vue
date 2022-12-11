@@ -47,7 +47,7 @@ onMounted(() => {
   setTimeout(() => {
     priceRange.value.min = props.minPrice;
     priceRange.value.max = props.maxPrice;
-  }, 200);
+  }, 500);
 });
 </script>
 <template>

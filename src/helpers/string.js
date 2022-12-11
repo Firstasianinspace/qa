@@ -35,3 +35,13 @@ export const pluralMonths = (number) =>
   plural(number, "месяц", "месяца", "месяцев");
 
 export const pluralYears = (number) => plural(number, "год", "года", "лет");
+
+export const maskCard = (str) => {
+  if (!str) return;
+  const strWithoutSpaces = str.replace(/\s/g, "");
+  const formattedMaskedCard =
+    strWithoutSpaces.substring(0, 4) +
+    "#".repeat(Math.max(0, strWithoutSpaces.length - 8)) +
+    strWithoutSpaces.substr(-4);
+  return formattedMaskedCard.replace(/.{4}/g, "$& ");
+};
