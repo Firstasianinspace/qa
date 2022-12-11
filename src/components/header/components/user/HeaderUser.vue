@@ -12,11 +12,11 @@ import { ionPersonOutline } from "@quasar/extras/ionicons-v6";
             ><router-link to="/"> Favorites </router-link></q-item-section
           >
         </q-item>
-        <q-item clickable>
+        <!-- <q-item clickable>
           <q-item-section
             ><router-link to="/"> Settings </router-link></q-item-section
           >
-        </q-item>
+        </q-item> -->
         <q-item clickable>
           <q-item-section
             ><router-link to="/"> Logout </router-link></q-item-section

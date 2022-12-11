@@ -18,7 +18,9 @@ const onSubmit = async () => {
       username: username.value,
       password: password.value,
     });
-    router.push("/catalog");
+    setTimeout(() => {
+      router.push("/catalog");
+    }, 1000);
   } catch (e) {
     $q.notify({
       color: "red-5",
