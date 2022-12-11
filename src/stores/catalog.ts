@@ -22,7 +22,10 @@ export const useCatalog = defineStore("catalog", {
         const { data } = await BaseApi.get("/api/items?limit=50");
         this.products = data.items.map((s: IProduct) => ({
           ...s,
-          quantity: 0,
+          quantity: 1,
+          currentPrice: s.discount_price
+            ? parseInt(s.discount_price)
+            : parseInt(s.price),
           discount: s.discount_price
             ? parseInt(s.price) - parseInt(s.discount_price)
             : 0,
@@ -38,6 +41,10 @@ export const useCatalog = defineStore("catalog", {
         );
         this.products = data.items.map((s: IProduct) => ({
           ...s,
+          quantity: 1,
+          currentPrice: s.discount_price
+            ? parseInt(s.discount_price)
+            : parseInt(s.price),
           discount: s.discount_price
             ? parseInt(s.price) - parseInt(s.discount_price)
             : 0,

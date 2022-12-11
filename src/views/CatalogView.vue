@@ -25,6 +25,8 @@ const { products } = storeToRefs(catalogStore);
 const { getProducts, getCategories } = catalogStore;
 
 const selectedCategories = ref("");
+const minPriceRange = ref(null);
+const maxPriceRange = ref(null);
 
 const checkBoxes = (value) => {
   selectedCategories.value = value;
@@ -32,33 +34,78 @@ const checkBoxes = (value) => {
 
 const filteredProducts = computed(() => {
   if (selectedCategories.value.length) {
-    return products.value.filter((s) =>
-      selectedCategories.value.includes(s.category)
-    );
+    return products.value.filter((s) => {
+      return selectedCategories.value.includes(s.category);
+    });
   }
   return products.value;
 });
 
-const filteredProductsCount = computed(() => filteredProducts.value.length);
+const filteredProductsRange = computed(() => {
+  return filteredProducts.value.filter(
+    (s) =>
+      s.currentPrice >= minPriceRange.value &&
+      s.currentPrice <= maxPriceRange.value
+  );
+});
+
+const filteredProductsRangeCount = computed(
+  () => filteredProductsRange.value.length
+);
+
+const productPrices = computed(() => {
+  return filteredProducts.value.map((s) => s.currentPrice);
+});
+
+const minPrice = computed(() =>
+  productPrices.value.length ? Math.min(...productPrices.value) : 0
+);
+const maxPrice = computed(() =>
+  productPrices.value.length ? Math.max(...productPrices.value) : 0
+);
+
+const setRangeSlider = (value) => {
+  minPriceRange.value = value.min;
+  maxPriceRange.value = value.max;
+};
+
+const setMinimum = (value) => {
+  minPriceRange.value = value.min;
+};
+
+const setMaximum = (value) => {
+  maxPriceRange.value = value.min;
+};
 
 onMounted(() => {
   getProducts();
   getCategories();
+  setTimeout(() => {
+    minPriceRange.value = minPrice.value;
+    maxPriceRange.value = maxPrice.value;
+  }, 200);
 });
 </script>
 <template>
   <div class="page catalog-page container">
     <div class="catalog-wrapper">
-      <CatalogSort :product-count="filteredProductsCount" />
+      <CatalogSort :product-count="filteredProductsRangeCount" />
       <CatalogLayout>
         <component
           :is="catalogCardComponent"
-          v-for="product in filteredProducts"
+          v-for="product in filteredProductsRange"
           :key="product.item_id"
           :product="product"
         />
       </CatalogLayout>
-      <CatalogSideBar @update="checkBoxes" />
+      <CatalogSideBar
+        @update="checkBoxes"
+        @updateRange="setRangeSlider"
+        @updateMinimum="setMinimum"
+        @updateMaximum="setMaximum"
+        :min-price="minPrice"
+        :max-price="maxPrice"
+      />
     </div>
   </div>
 </template>

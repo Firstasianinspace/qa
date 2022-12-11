@@ -4,7 +4,9 @@ import type { IProfileData, IAuthData } from "@/typings/profile";
 
 //* using option store syntax
 export const useUser = defineStore("user", {
-  persist: true,
+  persist: {
+    storage: sessionStorage,
+  },
   state: () => {
     const profile: IProfileData = <IProfileData>{};
     return {
