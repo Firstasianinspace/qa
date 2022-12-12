@@ -71,11 +71,11 @@ const setRangeSlider = (value) => {
 };
 
 const setMinimum = (value) => {
-  minPriceRange.value = value.min;
+  minPriceRange.value = parseInt(value);
 };
 
 const setMaximum = (value) => {
-  maxPriceRange.value = value.min;
+  maxPriceRange.value = parseInt(value);
 };
 
 onMounted(() => {

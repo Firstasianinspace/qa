@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useCatalog } from "@/stores/catalog";
 import { storeToRefs } from "pinia";
 
@@ -28,6 +28,9 @@ const priceRange = ref({
   max: props.maxPrice,
 });
 
+const availableMinimum = computed(() => props.minPrice);
+const availableMaximum = computed(() => props.maxPrice);
+
 const updateCheckbox = () => {
   emit("update", selected.value);
 };
@@ -36,11 +39,27 @@ const setRange = () => {
 };
 
 const setMinimumPrice = (value) => {
-  emit("update:updateMinimum", value);
+  if (
+    parseInt(value) < availableMinimum.value ||
+    parseInt(value) > availableMaximum.value
+  ) {
+    priceRange.value.min = availableMinimum.value;
+    emit("updateMinimum", availableMinimum.value);
+  } else {
+    emit("updateMinimum", value);
+  }
 };
 
 const setMaximumPrice = (value) => {
-  emit("update:updateMaximum", value);
+  if (
+    parseInt(value) < availableMinimum.value ||
+    parseInt(value) > availableMaximum.value
+  ) {
+    priceRange.value.max = availableMaximum.value;
+    emit("updateMaximum", availableMaximum.value);
+  } else {
+    emit("updateMaximum", value);
+  }
 };
 
 onMounted(() => {
@@ -75,13 +94,17 @@ onMounted(() => {
         <q-input
           outlined
           color="dark"
+          type="number"
           v-model="priceRange.min"
+          :min="minPrice"
           @update:model-value="setMinimumPrice"
         />
         <q-input
           outlined
           color="dark"
+          type="number"
           v-model="priceRange.max"
+          :max="maxPrice"
           @update:model-value="setMaximumPrice"
         />
       </div>
