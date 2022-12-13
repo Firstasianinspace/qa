@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
-import type { ICard } from "@/typings/card";
+import type { ICard, ICardPost, ICardDefault } from "@/typings/card";
 import { useUser } from "@/stores/user";
 import { maskCard } from "@/helpers";
 
@@ -39,6 +39,20 @@ export const usePayment = defineStore("payment", {
             label: "Новая карта",
             value: "Новая карта",
           });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async addCreditCard(payload: ICardPost) {
+      try {
+        await BaseApi.post("api/buy2", payload);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async setDefaultCard(payload: ICardDefault) {
+      try {
+        await BaseApi.post("api/set_default_card", payload);
       } catch (e) {
         console.log(e);
       }

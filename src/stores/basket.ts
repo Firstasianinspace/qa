@@ -4,6 +4,9 @@ import type { IProduct } from "@/typings/product";
 
 //* using option store syntax
 export const useBasket = defineStore("basket", {
+  persist: {
+    storage: sessionStorage,
+  },
   state: () => {
     const basketProducts: IProduct[] = [];
     const favoriteProducts: IProduct[] = [];

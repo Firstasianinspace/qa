@@ -22,6 +22,10 @@ const selectedCard = ref(null);
 const newCard = computed(() => selectedCard.value === "Новая карта");
 const cardOptions = computed(() => cards.value);
 
+const selected = computed(() =>
+  cards.value.find((s) => s.value === selectedCard.value)
+);
+
 onMounted(() => {
   fetchCards();
   setTimeout(() => {
@@ -52,13 +56,13 @@ onMounted(() => {
             :done="step > 2"
           >
             <q-select
+              outlined
               v-model="selectedCard"
               :options="cardOptions"
-              label="Выбрать карту"
               emit-value
             ></q-select>
             <PaymentCardNew v-if="newCard" />
-            <PaymentCard v-else />
+            <PaymentCard v-else :card="selected" />
             <q-stepper-navigation>
               <q-btn @click="step = 4" color="dark" label="Continue"></q-btn>
               <q-btn
