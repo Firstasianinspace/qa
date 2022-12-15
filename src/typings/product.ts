@@ -8,4 +8,5 @@ export interface IProduct {
   discount: number;
   category: string;
   brand: string;
+  quantity?: number;
 }

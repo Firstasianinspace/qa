@@ -36,6 +36,10 @@ export const useBasket = defineStore("basket", {
       }
       return basketProducts.map((x) => x.discount).reduce((a, b) => a + b);
     },
+    basketProductIds: ({ basketProducts }) =>
+      basketProducts.map((s: IProduct) => s.item_id),
+    favoriteProductIds: ({ favoriteProducts }) =>
+      favoriteProducts.map((s: IProduct) => s.item_id),
   },
   actions: {
     addProductToBasket(product: IProduct) {
@@ -44,6 +48,13 @@ export const useBasket = defineStore("basket", {
     removeProductFromBasket(product: IProduct) {
       const i = this.basketProducts.indexOf(product);
       this.basketProducts.splice(i, 1);
+    },
+    changeQuantity(itemId: string, quantity: number) {
+      this.basketProducts.map((s) => {
+        if (s.item_id === itemId) {
+          s.quantity = quantity;
+        }
+      });
     },
     addProductToFavorites(product: IProduct) {
       this.favoriteProducts.push(product);

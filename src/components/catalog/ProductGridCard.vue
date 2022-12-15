@@ -1,14 +1,14 @@
 <script setup>
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useBasket } from "@/stores/basket";
 import {
   ionCartOutline,
   ionHeartOutline,
   ionHeart,
-  ionCheckmark,
 } from "@quasar/extras/ionicons-v6";
 import BasePrice from "@/components/common/BasePrice.vue";
+import BaseCounter from "@/components/common/BaseCounter.vue";
 const NOIMAGE_URL = "/img/noimg.png";
 
 const props = defineProps({
@@ -24,14 +24,16 @@ const {
   removeProductFromBasket,
   addProductToFavorites,
   removeProductFromFavorites,
+  changeQuantity,
 } = basketStore;
-const { basketProducts, favoriteProducts } = storeToRefs(basketStore);
+const { basketProducts, basketProductIds, favoriteProducts } =
+  storeToRefs(basketStore);
 const isFavoriteProduct = computed(() =>
   favoriteProducts.value.includes(props.product)
 );
 
 const isAddedProduct = computed(() =>
-  basketProducts.value.includes(props.product)
+  basketProductIds.value.includes(props.product.item_id)
 );
 
 const toggleFavorite = (product) => {
@@ -42,12 +44,8 @@ const toggleFavorite = (product) => {
   }
 };
 
-const toggleProduct = (product) => {
-  if (isAddedProduct.value) {
-    removeProductFromBasket(product);
-  } else {
-    addProductToBasket(product);
-  }
+const addProduct = (product) => {
+  addProductToBasket(product);
 };
 
 const name = computed(() => props.product?.title);
@@ -57,19 +55,37 @@ const productImage = computed(
 const productPrice = computed(() => props.product?.price);
 const productDiscountPrice = computed(() => props.product?.discount_price || 0);
 const productBrand = computed(() => props.product?.brand);
+// const productQuantity = computed(() =>
+//   basketProducts.value
+//     .filter((s) => s.item_id === props.product.item_id)
+//     .map((x) => ({ quantity: x.quantity }))
+// );
+const productQuantity = computed(() => {
+  let quantity = null;
+  for (const item of basketProducts.value) {
+    if (item.item_id === props.product.item_id) {
+      quantity = item.quantity;
+    }
+  }
+  return quantity;
+  // return basketProducts.value.reduce((acc, val) => {
+  //   if (val.item_id === props.product.item_id) {
+  //     return val.quantity;
+  //   }
+  // }, {});
+});
+
+const displayCounter = computed(() => isAddedProduct.value);
+
+const updateProductQuantity = (value) => {
+  if (value === 0) {
+    removeProductFromBasket(props.product.item_id);
+  }
+  changeQuantity(props.product.item_id, value);
+};
 
 const dynamicIcon = computed(() =>
   isFavoriteProduct.value ? ionHeart : ionHeartOutline
-);
-
-const dynamicButtonIcon = computed(() =>
-  isAddedProduct.value ? ionCheckmark : ionCartOutline
-);
-const dynamicButtonLabel = computed(() =>
-  isAddedProduct.value ? "Added to Bag" : "Add to bag"
-);
-const dynamicButtonClass = computed(() =>
-  isAddedProduct.value ? "button-white" : "button-black"
 );
 </script>
 <template>
@@ -99,11 +115,18 @@ const dynamicButtonClass = computed(() =>
       </div>
     </div>
     <div class="product-grid-card__footer">
+      <BaseCounter
+        v-if="displayCounter"
+        :quantity="productQuantity"
+        @changeQuantity="updateProductQuantity"
+        @update:quantity="updateQuantity"
+      />
       <q-btn
-        :class="dynamicButtonClass"
-        :icon="dynamicButtonIcon"
-        :label="dynamicButtonLabel"
-        @click="toggleProduct(product)"
+        v-else
+        class="button-black"
+        :icon="ionCartOutline"
+        label="Add to bag"
+        @click="addProduct(product)"
       />
     </div>
   </div>

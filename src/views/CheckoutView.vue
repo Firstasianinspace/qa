@@ -41,7 +41,7 @@ onMounted(() => {
       <div class="checkout-stepper">
         <q-stepper v-model="step" vertical color="dark" animated>
           <q-step
-            :name="2"
+            :name="1"
             title="Доставка"
             :icon="ionCubeOutline"
             :done="step > 1"
@@ -49,9 +49,8 @@ onMounted(() => {
             <CheckoutForm @handleClick="nextStep" />
           </q-step>
           <q-step
-            :name="1"
+            :name="2"
             title="Оплата"
-            caption="Optional"
             :icon="ionCardOutline"
             :done="step > 2"
           >
@@ -64,7 +63,7 @@ onMounted(() => {
             <PaymentCardNew v-if="newCard" />
             <PaymentCard v-else :card="selected" />
             <q-stepper-navigation>
-              <q-btn @click="step = 4" color="dark" label="Continue"></q-btn>
+              <q-btn color="dark" label="Continue"></q-btn>
               <q-btn
                 flat
                 @click="step = 1"

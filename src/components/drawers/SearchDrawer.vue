@@ -1,8 +1,12 @@
 <script setup>
 import { ref } from "vue";
-const drawer = ref(true);
 
 const emit = defineEmits("close");
+
+const drawer = ref(true);
+
+const search = ref("");
+
 const clickOutside = () => {
   emit("close");
 };
@@ -13,13 +17,20 @@ const clickOutside = () => {
     <q-drawer
       v-model="drawer"
       side="right"
-      :width="550"
+      :width="650"
       :breakpoint="500"
       overlay
       bordered
       class="bg-grey-3"
     >
-      Hi
+      <div class="search">
+        <div class="search__header">
+          <h5>Поиск</h5>
+        </div>
+        <div class="search__body">
+          <q-input outlined color="dark" v-model="search" label="Поиск" />
+        </div>
+      </div>
     </q-drawer>
   </div>
 </template>
@@ -34,5 +45,8 @@ const clickOutside = () => {
     background: #000;
     opacity: 0.5;
   }
+}
+.search {
+  padding: 35px;
 }
 </style>

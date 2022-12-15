@@ -39,10 +39,7 @@ const setRange = () => {
 };
 
 const setMinimumPrice = (value) => {
-  if (
-    parseInt(value) < availableMinimum.value ||
-    parseInt(value) > availableMaximum.value
-  ) {
+  if (value < availableMinimum.value || value > availableMaximum.value) {
     priceRange.value.min = availableMinimum.value;
     emit("updateMinimum", availableMinimum.value);
   } else {
@@ -51,10 +48,7 @@ const setMinimumPrice = (value) => {
 };
 
 const setMaximumPrice = (value) => {
-  if (
-    parseInt(value) < availableMinimum.value ||
-    parseInt(value) > availableMaximum.value
-  ) {
+  if (value < availableMinimum.value || value > availableMaximum.value) {
     priceRange.value.max = availableMaximum.value;
     emit("updateMaximum", availableMaximum.value);
   } else {
@@ -95,7 +89,7 @@ onMounted(() => {
           outlined
           color="dark"
           type="number"
-          v-model="priceRange.min"
+          v-model.number="priceRange.min"
           :min="minPrice"
           @update:model-value="setMinimumPrice"
         />
@@ -103,7 +97,7 @@ onMounted(() => {
           outlined
           color="dark"
           type="number"
-          v-model="priceRange.max"
+          v-model.number="priceRange.max"
           :max="maxPrice"
           @update:model-value="setMaximumPrice"
         />

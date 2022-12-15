@@ -25,7 +25,7 @@ const productBrand = computed(() => props.product?.brand);
     </div>
     <div class="basket-product__item-body">
       <h6 class="basket-product__item-body__title">{{ name }}</h6>
-      <div class="basket-product__item-body__brand">
+      <div v-if="productBrand" class="basket-product__item-body__brand">
         <q-badge outline align="middle" color="black">
           {{ productBrand }}
         </q-badge>

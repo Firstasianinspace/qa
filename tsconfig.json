@@ -6,6 +6,10 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "lib": [
+      // ... other libs
+      "es2019"
+    ],
     "allowJs": true
   },
 
