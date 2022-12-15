@@ -119,7 +119,6 @@ const dynamicIcon = computed(() =>
         v-if="displayCounter"
         :quantity="productQuantity"
         @changeQuantity="updateProductQuantity"
-        @update:quantity="updateQuantity"
       />
       <q-btn
         v-else

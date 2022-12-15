@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
-import type { IProduct } from "@/typings/product";
+import type { IProduct, IBasketItem } from "@/typings/product";
 
 //* using option store syntax
 export const useBasket = defineStore("basket", {
@@ -8,7 +8,7 @@ export const useBasket = defineStore("basket", {
     storage: sessionStorage,
   },
   state: () => {
-    const basketProducts: IProduct[] = [];
+    const basketProducts: IBasketItem[] = [];
     const favoriteProducts: IProduct[] = [];
     return {
       basketProducts,
@@ -23,29 +23,27 @@ export const useBasket = defineStore("basket", {
         return 0;
       }
       return basketProducts
-        .map((x) =>
-          parseInt(x.discount_price)
-            ? parseInt(x.discount_price)
-            : parseInt(x.price)
-        )
+        .map((x) => x.currentPrice * x.quantity)
         .reduce((a, b) => a + b);
     },
     discountTotal: ({ basketProducts }) => {
       if (basketProducts.length === 0) {
         return 0;
       }
-      return basketProducts.map((x) => x.discount).reduce((a, b) => a + b);
+      return basketProducts
+        .map((x) => x.discount * x.quantity)
+        .reduce((a, b) => a + b);
     },
     basketProductIds: ({ basketProducts }) =>
-      basketProducts.map((s: IProduct) => s.item_id),
+      basketProducts.map((s: IBasketItem) => s.item_id),
     favoriteProductIds: ({ favoriteProducts }) =>
       favoriteProducts.map((s: IProduct) => s.item_id),
   },
   actions: {
-    addProductToBasket(product: IProduct) {
+    addProductToBasket(product: IBasketItem) {
       this.basketProducts.push(product);
     },
-    removeProductFromBasket(product: IProduct) {
+    removeProductFromBasket(product: IBasketItem) {
       const i = this.basketProducts.indexOf(product);
       this.basketProducts.splice(i, 1);
     },

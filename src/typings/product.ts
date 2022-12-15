@@ -8,5 +8,18 @@ export interface IProduct {
   discount: number;
   category: string;
   brand: string;
-  quantity?: number;
+}
+
+export interface IBasketItem {
+  item_id: string;
+  title: string;
+  description: string;
+  item_image_url: string;
+  price: string;
+  currentPrice: number;
+  discount_price: string;
+  discount: number;
+  category: string;
+  brand: string;
+  quantity: number;
 }
