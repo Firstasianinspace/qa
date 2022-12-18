@@ -18,8 +18,7 @@ export const useUser = defineStore("user", {
   },
   getters: {
     loggedIn: (state) => state.initialized && !!state.profile.userID,
-    hasToken: (state) =>
-      state.initialized && !!localStorage.getItem("authToken"),
+    hasToken: () => Cookies.has("authToken"),
   },
   actions: {
     setUser(payload: IProfileData) {

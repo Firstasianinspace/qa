@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginView from "@/views/LoginView.vue";
 import { useUser } from "@/stores/user";
+import { Cookies } from "quasar";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,8 +56,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const { loggedIn } = useUser();
-  if (to.name !== "login" && !loggedIn) next({ name: "login" });
+  const hasToken = Cookies.has("authToken");
+  console.log(hasToken);
+  if (to.name !== "login" && !hasToken) next({ name: "login" });
   else next();
 });
 // router.beforeEach(async (to, from) => {
