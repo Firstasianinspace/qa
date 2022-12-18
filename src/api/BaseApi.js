@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Cookies } from "quasar";
 
 const fetchClient = () => {
   const defaultOptions = {
@@ -10,7 +11,10 @@ const fetchClient = () => {
   const BaseApi = axios.create(defaultOptions);
 
   BaseApi.interceptors.request.use(function (config) {
-    const token = localStorage.getItem("authToken");
+    const options = {
+      expires: "1h",
+    };
+    const token = Cookies.get("authToken", options);
     config.headers.Authorization = token ? token : "";
     return config;
   });

@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { ionSearchOutline, ionCloseOutline } from "@quasar/extras/ionicons-v6";
 
 const emit = defineEmits("close");
 
@@ -25,10 +26,18 @@ const clickOutside = () => {
     >
       <div class="search">
         <div class="search__header">
-          <h5>Поиск</h5>
-        </div>
-        <div class="search__body">
-          <q-input outlined color="dark" v-model="search" label="Поиск" />
+          <q-input outlined color="dark" v-model="search" label="Поиск">
+            <template v-slot:prepend>
+              <q-icon :name="ionSearchOutline"></q-icon>
+            </template>
+            <template v-if="search" v-slot:append>
+              <q-icon
+                :name="ionCloseOutline"
+                @click.stop.prevent="search = null"
+                class="cursor-pointer"
+              ></q-icon>
+            </template>
+          </q-input>
         </div>
       </div>
     </q-drawer>

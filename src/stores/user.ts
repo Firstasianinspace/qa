@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
 import type { IProfileData, IAuthData } from "@/typings/profile";
+import { Cookies } from "quasar";
 
 //* using option store syntax
 export const useUser = defineStore("user", {
@@ -43,11 +44,13 @@ export const useUser = defineStore("user", {
     async authLogin(authData: IAuthData) {
       await BaseApi.post("api/auth", authData).then((response) => {
         const token = response.headers["grpc-metadata-authorization"];
-        console.log("about to set token");
-        localStorage.setItem("authToken", token);
+        console.log(token);
+        Cookies.set("authToken", token);
         this.token = token;
       });
       this.init();
     },
   },
 });
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzEzNzMxMzAsImlzcyI6IjEifQ.gLR3vfQqzB9rd58CHO-980oNYUmETFA08tiUbYc1H3g
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzEzNzMxMzAsImlzcyI6IjEifQ.gLR3vfQqzB9rd58CHO-980oNYUmETFA08tiUbYc1H3g
