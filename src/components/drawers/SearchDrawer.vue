@@ -26,7 +26,13 @@ const clickOutside = () => {
     >
       <div class="search">
         <div class="search__header">
-          <q-input outlined color="dark" v-model="search" label="Поиск">
+          <q-input
+            outlined
+            color="dark"
+            v-model="search"
+            label="Поиск"
+            autofocus
+          >
             <template v-slot:prepend>
               <q-icon :name="ionSearchOutline"></q-icon>
             </template>

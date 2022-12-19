@@ -72,16 +72,5 @@ export const useCatalog = defineStore("catalog", {
         console.log(e);
       }
     },
-    // async fetchUser() {
-    //   try {
-    //     const { data } = await (new PersonalApi(context.$baseApi, context)).getProfile()
-    //     this.profile = data
-    //   } catch (e) {
-    //     console.log(e)
-    //   }
-    // },
-    // async authRegister(authData: IAuthData) {
-    //   const { data } = await (new AuthApi($baseApi)).authRegister(authData)
-    // },
   },
 });
