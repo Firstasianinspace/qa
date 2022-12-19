@@ -35,7 +35,12 @@ export const useBasket = defineStore("basket", {
         .reduce((a, b) => a + b);
     },
     basketProductIds: ({ basketProducts }) =>
-      basketProducts.map((s: IBasketItem) => s.item_id),
+      basketProducts.flatMap((s: IBasketItem) => {
+        if (s.quantity > 0) {
+          return Array(s.quantity).fill(s.item_id);
+        }
+        return s.item_id;
+      }),
     favoriteProductIds: ({ favoriteProducts }) =>
       favoriteProducts.map((s: IProduct) => s.item_id),
   },
@@ -47,7 +52,10 @@ export const useBasket = defineStore("basket", {
       const i = this.basketProducts.indexOf(product);
       this.basketProducts.splice(i, 1);
     },
-    changeQuantity(itemId: string, quantity: number) {
+    clearBasket() {
+      this.basketProducts = [];
+    },
+    changeQuantity(itemId: string, quantity: number): void {
       this.basketProducts.map((s) => {
         if (s.item_id === itemId) {
           s.quantity = quantity;
@@ -61,16 +69,5 @@ export const useBasket = defineStore("basket", {
       const i = this.favoriteProducts.indexOf(product);
       this.favoriteProducts.splice(i, 1);
     },
-    // async fetchUser() {
-    //   try {
-    //     const { data } = await (new PersonalApi(context.$baseApi, context)).getProfile()
-    //     this.profile = data
-    //   } catch (e) {
-    //     console.log(e)
-    //   }
-    // },
-    // async authRegister(authData: IAuthData) {
-    //   const { data } = await (new AuthApi($baseApi)).authRegister(authData)
-    // },
   },
 });

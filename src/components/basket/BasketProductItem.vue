@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import BasePrice from "@/components/common/BasePrice.vue";
+import BaseCounter from "@/components/common/BaseCounter.vue";
 const NOIMAGE_URL = "/img/noimg.png";
 
 const props = defineProps({
@@ -34,6 +35,13 @@ const productBrand = computed(() => props.product?.brand);
         <BasePrice
           :price="productPrice"
           :discount-price="productDiscountPrice"
+        />
+      </div>
+      <div class="basket-product__item-body__count">
+        <BaseCounter
+          v-if="displayCounter"
+          :quantity="productQuantity"
+          @changeQuantity="updateProductQuantity"
         />
       </div>
     </div>
