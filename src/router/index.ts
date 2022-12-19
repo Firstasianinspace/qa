@@ -57,7 +57,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const hasToken = Cookies.has("authToken");
-  console.log(hasToken);
   if (to.name !== "login" && !hasToken) next({ name: "login" });
   else next();
 });

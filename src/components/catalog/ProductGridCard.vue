@@ -79,7 +79,7 @@ const displayCounter = computed(() => isAddedProduct.value);
 
 const updateProductQuantity = (value) => {
   if (value === 0) {
-    removeProductFromBasket(props.product.item_id);
+    removeProductFromBasket(props.product);
   }
   changeQuantity(props.product.item_id, value);
 };
