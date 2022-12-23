@@ -1,15 +1,29 @@
 <script setup>
 import { ref, computed } from "vue";
+import { useUser } from "@/stores/user";
+import { storeToRefs } from "pinia";
+
+const userStore = useUser();
+const { profile } = storeToRefs(userStore);
+
+const emit = defineEmits(["submitNewCard", "goBack"]);
+
+const date = ref(null);
+// MEGA костыль x3
+const dateFormatted = computed(() => {
+  if (date.value?.length >= 7) {
+    return convertDateToIso(date.value);
+  }
+  return null;
+});
 
 const newCard = ref({
   number: null,
   cvv: null,
-  expiration_date: null,
+  expiration_date: dateFormatted.value,
   name: null,
-  user_id: null,
+  user_id: profile.value.userID,
 });
-
-const date = ref(null);
 
 // MEGA костыль
 const isDateValid = (value) => {
@@ -18,17 +32,27 @@ const isDateValid = (value) => {
   const cardMonth = Number(value.slice(0, 2));
   const cardYear = Number(value.slice(-2));
   return (cardMonth < 13 && cardYear > parseInt(year)) || "Неверно";
-  // const today = new Date();
-  // const year = today.getFullYear();
-  // const month = today.getMonth();
-  // const cardMonth = value.slice(0, 2);
-  // const cardYear = value.slice(-2);
-  // return
+};
+// MEGA костыль x2
+const convertDateToIso = (value) => {
+  const getFullDate = `20${value.slice(-2)}-${value.slice(0, 2)}-01`;
+  const date = new Date(getFullDate);
+  const iso = date.toISOString();
+  newCard.value.expiration_date = iso;
+  return iso;
+};
+
+const onSubmit = () => {
+  emit("submitNewCard", newCard.value);
+};
+
+const goStepBack = () => {
+  emit("goBack");
 };
 </script>
 
 <template>
-  <form class="payment-card__new">
+  <form @submit.prevent="onSubmit" class="payment-card__new">
     <div class="payment-card payment-card__front">
       <q-input
         color="dark"
@@ -37,9 +61,16 @@ const isDateValid = (value) => {
         mask="#### #### #### ####"
         fill-mask="#"
         class="payment-card__input-number"
+        :rules="[(val) => !!val || 'Обязательное поле']"
       />
-      <div class="payment-card__date">
-        <div class="payment-card__date-label">Действует до</div>
+      <div class="payment-card__name-date">
+        <q-input
+          color="dark"
+          v-model="newCard.name"
+          label="Имя фамилия"
+          :rules="[(val) => !!val || 'Обязательное поле']"
+          class="payment-card__input-name"
+        />
         <q-input
           color="dark"
           v-model="date"
@@ -59,10 +90,12 @@ const isDateValid = (value) => {
         type="tel"
         maxlength="3"
         lazy-rules
-        :rules="[(val) => (val && val.length < 3) || 'Неверно']"
+        :rules="[(val) => (val && val.length === 3) || 'Неверно']"
         class="payment-card__back-cvv"
       />
     </div>
+    <q-btn label="Купить" type="submit" color="dark" />
+    <q-btn @click="goStepBack" label="Назад" color="dark" />
   </form>
 </template>
 <style lang="scss">
@@ -98,16 +131,16 @@ const isDateValid = (value) => {
       right: 0;
     }
   }
+  &__name-date {
+    display: flex;
+    gap: 15px;
+  }
   &__date {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 15px;
     padding: 15px 0 0 0;
-    &-label {
-      font-size: 16px;
-      padding: 5px 0 0 0;
-    }
   }
   &__input {
     &-date {

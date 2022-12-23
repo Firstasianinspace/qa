@@ -53,14 +53,4 @@ const displayModals = computed(() => {
       @close="() => handleResolve(single.id, null)"
     />
   </div>
-  <!-- <q-drawer
-    v-model="drawerLeft"
-    show-if-above
-    :width="200"
-    :breakpoint="700"
-    elevated
-    class="bg-primary text-white"
-  >
-
-  </q-drawer> -->
 </template>

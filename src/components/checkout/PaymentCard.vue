@@ -7,15 +7,25 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["submitExistedCard", "goBack"]);
+
 const cvv = ref(null);
 
 const cardNumber = computed(() => props.card?.label);
 const isValidCvv = (val) => {
   return val === props.card.cvv || "Неверно";
 };
+
+const goStepBack = () => {
+  emit("goBack");
+};
+
+const onSubmit = () => {
+  emit("submitExistedCard");
+};
 </script>
 <template>
-  <div class="payment-card">
+  <form @submit.prevent="onSubmit" class="payment-card">
     <!-- <h6 class="payment-card__title">{{ cardName }}</h6> -->
     <p class="payment-card__number">
       {{ cardNumber }}
@@ -30,7 +40,9 @@ const isValidCvv = (val) => {
       class="payment-card__cvv"
     />
     <p>Код безопасности</p>
-  </div>
+    <q-btn label="Купить" type="submit" color="dark" />
+    <q-btn @click="goStepBack" label="Назад" color="dark" />
+  </form>
 </template>
 <style lang="scss">
 .payment-card {

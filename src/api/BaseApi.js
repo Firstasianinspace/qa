@@ -12,10 +12,10 @@ const fetchClient = () => {
 
   BaseApi.interceptors.request.use(function (config) {
     const options = {
-      expires: "1h",
+      expires: "58m 10s",
     };
     const token = Cookies.get("authToken", options);
-    config.headers.Authorization = token ? token : "";
+    config.headers.Authorization = token;
     return config;
   });
 

@@ -20,7 +20,7 @@ export const useCatalog = defineStore("catalog", {
     productCount: (state) => state.products.length || 0,
   },
   actions: {
-    async getProducts() {
+    async getProducts(): Promise<void> {
       try {
         const { data } = await BaseApi.get("/api/items?limit=50");
         this.products = data.items.map((s: IProduct) => ({
@@ -37,7 +37,7 @@ export const useCatalog = defineStore("catalog", {
         console.log(e);
       }
     },
-    async getProduct(payload: number) {
+    async getProduct(payload: number): Promise<void> {
       try {
         const { data } = await BaseApi.get(
           `api/items?item_id=${payload}&offset=0&limit=50`
@@ -56,7 +56,7 @@ export const useCatalog = defineStore("catalog", {
         console.log(e);
       }
     },
-    async getCategories() {
+    async getCategories(): Promise<void> {
       try {
         const { data } = await BaseApi.get("/api/categories?limit=50");
         this.categories = data.categories;
@@ -64,7 +64,7 @@ export const useCatalog = defineStore("catalog", {
         console.log(e);
       }
     },
-    async getBrands() {
+    async getBrands(): Promise<void> {
       try {
         const { data } = await BaseApi.get("/api/brands?limit=50");
         this.brands = data.brands;

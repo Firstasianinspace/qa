@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
 import type { ICard, ICardPost, ICardDefault } from "@/typings/card";
-import { useUser } from "@/stores/user";
 import { maskCard } from "@/helpers";
 
 //* using option store syntax
@@ -19,11 +18,10 @@ export const usePayment = defineStore("payment", {
     },
   },
   actions: {
-    async fetchCards() {
-      const { profile } = useUser();
+    async fetchCards(userID: string) {
       try {
         const { data } = await BaseApi.get(
-          `/api/get_cards_by_user_id?user_id=${profile.userID}`
+          `/api/get_cards_by_user_id?user_id=${userID}`
         );
         this.cards = data?.cards
           .filter(
@@ -56,6 +54,13 @@ export const usePayment = defineStore("payment", {
       } catch (e) {
         console.log(e);
       }
+    },
+    async purchaseItems(products: string[], userID: string) {
+      const formData = {
+        item_id: products,
+        user_id: userID,
+      };
+      await BaseApi.post(`/api/buy1`, formData);
     },
   },
 });

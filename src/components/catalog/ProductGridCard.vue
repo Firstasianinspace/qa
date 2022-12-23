@@ -55,11 +55,7 @@ const productImage = computed(
 const productPrice = computed(() => props.product?.price);
 const productDiscountPrice = computed(() => props.product?.discount_price || 0);
 const productBrand = computed(() => props.product?.brand);
-// const productQuantity = computed(() =>
-//   basketProducts.value
-//     .filter((s) => s.item_id === props.product.item_id)
-//     .map((x) => ({ quantity: x.quantity }))
-// );
+
 const productQuantity = computed(() => {
   let quantity = null;
   for (const item of basketProducts.value) {
@@ -68,11 +64,6 @@ const productQuantity = computed(() => {
     }
   }
   return quantity;
-  // return basketProducts.value.reduce((acc, val) => {
-  //   if (val.item_id === props.product.item_id) {
-  //     return val.quantity;
-  //   }
-  // }, {});
 });
 
 const displayCounter = computed(() => isAddedProduct.value);

@@ -1,5 +1,7 @@
 <script setup>
 import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useBasket } from "@/stores/basket";
 import BasePrice from "@/components/common/BasePrice.vue";
 import BaseCounter from "@/components/common/BaseCounter.vue";
 const NOIMAGE_URL = "/img/noimg.png";
@@ -10,7 +12,9 @@ const props = defineProps({
     required: true,
   },
 });
-
+const basketStore = useBasket();
+const { removeProductFromBasket, changeQuantity } = basketStore;
+const { basketProducts } = storeToRefs(basketStore);
 const name = computed(() => props.product?.title);
 const productImage = computed(
   () => props.product?.item_image_url || NOIMAGE_URL
@@ -18,6 +22,21 @@ const productImage = computed(
 const productPrice = computed(() => props.product?.price);
 const productDiscountPrice = computed(() => props.product?.discount_price || 0);
 const productBrand = computed(() => props.product?.brand);
+const productQuantity = computed(() => {
+  let quantity = null;
+  for (const item of basketProducts.value) {
+    if (item.item_id === props.product.item_id) {
+      quantity = item.quantity;
+    }
+  }
+  return quantity;
+});
+const updateProductQuantity = (value) => {
+  if (value === 0) {
+    removeProductFromBasket(props.product);
+  }
+  changeQuantity(props.product.item_id, value);
+};
 </script>
 <template>
   <div class="basket-product__item">
@@ -39,7 +58,6 @@ const productBrand = computed(() => props.product?.brand);
       </div>
       <div class="basket-product__item-body__count">
         <BaseCounter
-          v-if="displayCounter"
           :quantity="productQuantity"
           @changeQuantity="updateProductQuantity"
         />
