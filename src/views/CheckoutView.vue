@@ -56,7 +56,7 @@ const submitNewCard = async (value) => {
     card_id: cardOptions.value.at(-2).id,
     user_id: profile.value.userID,
   });
-  // а все потому что покупки идут по умолчанию с дефолтной карты
+  // покупки идут по умолчанию с дефолтной карты
   await purchaseItems(basketProductIds.value, profile.value.userID);
   paymentLoading.value = false;
 };

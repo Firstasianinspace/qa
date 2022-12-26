@@ -6,6 +6,9 @@ import type { IBrand } from "@/typings/brands";
 
 //* using option store syntax
 export const useCatalog = defineStore("catalog", {
+  persist: {
+    storage: sessionStorage,
+  },
   state: () => {
     const products: IProduct[] = [];
     const categories: ICategory[] = [];

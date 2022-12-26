@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginView from "@/views/LoginView.vue";
-import { useUser } from "@/stores/user";
 import { Cookies } from "quasar";
 
 const router = createRouter({
@@ -40,7 +39,7 @@ const router = createRouter({
       path: "/cart",
       name: "cart",
       // route level code-splitting
-      // this generates a separate chunk (Payment.[hash].js) for this route
+      // this generates a separate chunk (Cart.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/CartView.vue"),
     },
@@ -48,9 +47,33 @@ const router = createRouter({
       path: "/checkout",
       name: "checkout",
       // route level code-splitting
-      // this generates a separate chunk (Payment.[hash].js) for this route
+      // this generates a separate chunk (Checkout.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/CheckoutView.vue"),
+    },
+    {
+      path: "/user",
+      name: "user",
+      // route level code-splitting
+      // this generates a separate chunk (User.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import("../views/UserView.vue"),
+    },
+    {
+      path: "/orders/:id",
+      name: "orders",
+      // route level code-splitting
+      // this generates a separate chunk (Order.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import("../views/OrderView.vue"),
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      // route level code-splitting
+      // this generates a separate chunk (Admin.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import("../views/AdminView.vue"),
     },
   ],
 });

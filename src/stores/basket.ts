@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import BaseApi from "@/api/BaseApi";
 import type { IProduct, IBasketItem } from "@/typings/product";
 
 //* using option store syntax

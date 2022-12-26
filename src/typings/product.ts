@@ -23,3 +23,11 @@ export interface IBasketItem {
   brand: string;
   quantity: number;
 }
+
+export interface IOrderItem {
+  id: string;
+  buy_date: string;
+  user_id: string;
+  item_id: string | string[];
+  card_id: string;
+}

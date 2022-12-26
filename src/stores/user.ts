@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
 import type { IProfileData, IAuthData } from "@/typings/profile";
+import type { IOrderItem } from "@/typings/product";
 import { Cookies } from "quasar";
 
 //* using option store syntax
@@ -10,10 +11,12 @@ export const useUser = defineStore("user", {
   },
   state: () => {
     const profile: IProfileData = <IProfileData>{};
+    const profileOrders: IOrderItem[] = [];
     return {
       profile,
       initialized: false,
       token: "",
+      profileOrders,
     };
   },
   getters: {
@@ -47,6 +50,32 @@ export const useUser = defineStore("user", {
         this.token = token;
       });
       this.init();
+    },
+    async getBuys(): Promise<void> {
+      try {
+        const { data } = await BaseApi.get(
+          `api/get_buys?limit=50&offset=0&user_id=1`
+        );
+        this.profileOrders = data.buys.reduce(
+          (acc: IOrderItem[], item: IOrderItem) => {
+            const existing = acc.find(
+              (innerItem: IOrderItem) => innerItem.card_id === item.card_id
+            );
+            if (existing) {
+              existing.item_id = Array.isArray(existing.item_id)
+                ? existing.item_id
+                : [existing.item_id];
+              existing.item_id.push(item.item_id as string);
+            } else {
+              acc.push(item);
+            }
+            return acc.reverse();
+          },
+          []
+        );
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 });
