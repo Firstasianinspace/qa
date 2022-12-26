@@ -45,3 +45,11 @@ export const maskCard = (str) => {
     strWithoutSpaces.substr(-4);
   return formattedMaskedCard.replace(/.{4}/g, "$& ");
 };
+
+export const truncateString = (str, num) => {
+  if (str.length > num) {
+    return str.slice(0, num) + "...";
+  } else {
+    return str;
+  }
+};

@@ -52,12 +52,54 @@ const router = createRouter({
       component: () => import("../views/CheckoutView.vue"),
     },
     {
-      path: "/user",
-      name: "user",
+      path: "/profile",
+      name: "profile",
+      redirect: {
+        name: "profile-orders",
+      },
       // route level code-splitting
-      // this generates a separate chunk (User.[hash].js) for this route
+      // this generates a separate chunk (page.profile.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import("../views/UserView.vue"),
+      component: () =>
+        import("../layouts/ProfileLayout.vue").then((c) => c.default || c),
+      children: [
+        {
+          path: "/orders",
+          name: "profile-orders",
+          component: () =>
+            import(
+              /* webpackChunkName: "page.profile.orders" */
+              "../views/Profile/ProfileOrders.vue"
+            ).then((c) => c.default || c),
+        },
+        {
+          path: "/order/:id",
+          name: "profile-order-details",
+          component: () =>
+            import(
+              /* webpackChunkName: "page.profile.orders.detail" */
+              "../views/Profile/ProfileOrderDetails.vue"
+            ).then((c) => c.default || c),
+        },
+        {
+          path: "/favorites",
+          name: "profile-favorites",
+          component: () =>
+            import(
+              /* webpackChunkName: "page.profile.favorites" */
+              "../views/Profile/ProfileFavorites.vue"
+            ).then((c) => c.default || c),
+        },
+        {
+          path: "/personal",
+          name: "profile-personal",
+          component: () =>
+            import(
+              /* webpackChunkName: "page.profile.personal" */
+              "../views/Profile/ProfilePersonal.vue"
+            ).then((c) => c.default || c),
+        },
+      ],
     },
     {
       path: "/orders/:id",

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { convertISODateToString, countDuplicates } from "@/helpers";
-import ProfileOrderItem from "@/components/user/ProfileOrderItem.vue";
+import ProfileOrderItem from "@/components/profile/ProfileOrderItem.vue";
 const props = defineProps({
   orders: {
     type: Array,
