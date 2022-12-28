@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useCatalog } from "@/stores/catalog";
-import { truncateString } from "@/helpers";
+import { ionAddOutline } from "@quasar/extras/ionicons-v6";
 const NOIMAGE_URL = "/img/noimg.png";
 
 const catalogStore = useCatalog();
@@ -21,26 +21,25 @@ const productImage = computed(
   () => productItem.value?.item_image_url || NOIMAGE_URL
 );
 
-const productTitleTruncate = computed(() =>
-  truncateString(productItem.value.title, 25)
-);
+const displayAdditionalItems = computed(() => props.product.mock);
 </script>
 <template>
-  <div class="profile-order-item">
-    <div class="profile-order-item__image">
-      <q-img :src="productImage" :ratio="1" />
+  <div class="profile-order-item__wrapper">
+    <div v-if="displayAdditionalItems" class="profile-order-item__additional">
+      <q-icon :name="ionAddOutline" size="36px" />
     </div>
-    <div class="profile-order-item__title">
-      {{ productTitleTruncate }}
+    <div v-else class="profile-order-item">
+      <div class="profile-order-item__image">
+        <q-img :src="productImage" :ratio="1" />
+      </div>
+      <div class="profile-order-item__title">
+        {{ productTitleTruncate }}
+      </div>
+      <div class="product-order-item__quantity">x{{ product.quantity }}</div>
     </div>
-    <h6>{{ product.quantity }}</h6>
   </div>
 </template>
 <style lang="scss">
 .profile-order-item {
-  max-height: 200px;
-  &__image {
-    max-width: 100px;
-  }
 }
 </style>

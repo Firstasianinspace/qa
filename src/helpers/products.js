@@ -5,3 +5,15 @@ export const countDuplicates = (arr) => {
   );
   return count;
 };
+
+export const addMockObjectToArray = (arr) => {
+  if (countDuplicates(arr).length < 4) {
+    return countDuplicates(arr);
+  }
+  const mockObject = {
+    id: null,
+    quantity: null,
+    mock: true,
+  };
+  return [...countDuplicates(arr).slice(0, 3), mockObject];
+};

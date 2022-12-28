@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { ionCubeOutline, ionCardOutline } from "@quasar/extras/ionicons-v6";
 import { usePayment } from "@/stores/payment";
@@ -9,6 +10,11 @@ import CheckoutForm from "@/components/checkout/CheckoutForm.vue";
 import CheckoutSidebar from "@/components/checkout/CheckoutSidebar.vue";
 import PaymentCard from "@/components/checkout/PaymentCard.vue";
 import PaymentCardNew from "@/components/checkout/PaymentCardNew.vue";
+import { useQuasar } from "quasar";
+import { ionCheckmarkDoneOutline } from "@quasar/extras/ionicons-v6";
+
+const $q = useQuasar();
+const router = useRouter();
 
 const paymentStore = usePayment();
 const { fetchCards, purchaseItems, addCreditCard, setDefaultCard } =
@@ -40,25 +46,47 @@ const selected = computed(() =>
 );
 
 const submitPayment = async () => {
-  paymentLoading.value = true;
-  await purchaseItems(basketProductIds.value, profile.value.userID);
-  paymentLoading.value = false;
+  try {
+    paymentLoading.value = true;
+    await purchaseItems(basketProductIds.value, profile.value.userID);
+    paymentLoading.value = false;
+    $q.notify({
+      color: "green-4",
+      textColor: "white",
+      icon: ionCheckmarkDoneOutline,
+      message: "Успешно",
+    });
+    router.push("/orders");
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const submitNewCard = async (value) => {
-  paymentLoading.value = true;
-  // костыль сначала добавляем карту
-  await addCreditCard(value);
-  // потом тянем все карты
-  await fetchCards(profile.value.userID);
-  // потом запрос чтоб сделать последнюю добавленную карту дефолтной
-  await setDefaultCard({
-    card_id: cardOptions.value.at(-2).id,
-    user_id: profile.value.userID,
-  });
-  // покупки идут по умолчанию с дефолтной карты
-  await purchaseItems(basketProductIds.value, profile.value.userID);
-  paymentLoading.value = false;
+  try {
+    paymentLoading.value = true;
+    // костыль сначала добавляем карту
+    await addCreditCard(value);
+    // потом тянем все карты
+    await fetchCards(profile.value.userID);
+    // потом запрос чтоб сделать последнюю добавленную карту дефолтной
+    await setDefaultCard({
+      card_id: cardOptions.value.at(-2).id,
+      user_id: profile.value.userID,
+    });
+    // покупки идут по умолчанию с дефолтной карты
+    await purchaseItems(basketProductIds.value, profile.value.userID);
+    paymentLoading.value = false;
+    $q.notify({
+      color: "green-4",
+      textColor: "white",
+      icon: ionCheckmarkDoneOutline,
+      message: "Успешно",
+    });
+    router.push("/orders");
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 onMounted(() => {
