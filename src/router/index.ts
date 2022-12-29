@@ -80,6 +80,7 @@ const router = createRouter({
               /* webpackChunkName: "page.profile.orders.detail" */
               "../views/Profile/ProfileOrderDetails.vue"
             ).then((c) => c.default || c),
+          props: true,
         },
         {
           path: "/favorites",

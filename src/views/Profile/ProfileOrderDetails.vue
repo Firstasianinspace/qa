@@ -1,3 +1,10 @@
+<script setup>
+defineProps({
+  order: {
+    type: Object,
+  },
+});
+</script>
 <template>
   <div class="about">
     <h1>This is an profile order details</h1>

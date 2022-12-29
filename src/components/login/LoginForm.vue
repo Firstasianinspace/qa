@@ -56,7 +56,9 @@ const onReset = () => {
       v-model="password"
       label="Your password *"
       lazy-rules
-      :rules="(val) => (val !== null && val !== '') || 'Please type something'"
+      :rules="[
+        (val) => (val !== null && val !== '') || 'Please type something',
+      ]"
     />
     <div>
       <q-btn label="Login" type="submit" color="primary"></q-btn>

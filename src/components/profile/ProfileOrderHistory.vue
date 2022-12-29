@@ -1,20 +1,36 @@
 <script setup>
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { convertISODateToString, addMockObjectToArray } from "@/helpers";
 import ProfileOrderItem from "@/components/profile/ProfileOrderItem.vue";
+
 const props = defineProps({
   orders: {
     type: Array,
   },
 });
 
+const router = useRouter();
+
 const orderItems = computed(() =>
-  props.orders.map((s) => ({
-    ...s,
-    date: convertISODateToString(s.buy_date),
-    products: addMockObjectToArray(s.item_id),
-  }))
+  props.orders
+    .map((s) => ({
+      ...s,
+      date: convertISODateToString(s.buy_date),
+      products: addMockObjectToArray(s.item_id),
+    }))
+    .reverse()
 );
+
+const goToOrderDetails = (id) => {
+  router.push({
+    name: "profile-order-details",
+    path: `/order/`,
+    params: {
+      id,
+    },
+  });
+};
 </script>
 <template>
   <div class="profile-order-history">
@@ -22,9 +38,12 @@ const orderItems = computed(() =>
       class="profile-order-history__item"
       v-for="item in orderItems"
       :key="item.id"
+      @click="goToOrderDetails(item.id)"
     >
       <div class="profile-order-history__item-header">
-        <p>{{ item.id }}</p>
+        <div class="profile-order-histore__item-header-id">
+          <span>Номер заказа </span><span>{{ item.id }}</span>
+        </div>
         <p>{{ item.date }}</p>
       </div>
       <ProfileOrderItem
@@ -41,7 +60,7 @@ const orderItems = computed(() =>
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
+    row-gap: 10px;
     &-header {
       grid-column: 1 / 6;
       display: flex;

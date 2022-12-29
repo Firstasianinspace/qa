@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
 import type { IProfileData, IAuthData } from "@/typings/profile";
 import type { IOrderItem } from "@/typings/product";
+import { compareDateTimeOnOneOrder } from "@/helpers";
 import { Cookies } from "quasar";
 
 //* using option store syntax
@@ -58,18 +59,22 @@ export const useUser = defineStore("user", {
         );
         this.profileOrders = data.buys.reduce(
           (acc: IOrderItem[], item: IOrderItem) => {
-            const existing = acc.find(
-              (innerItem: IOrderItem) => innerItem.card_id === item.card_id
+            /* костыль
+            На беке каждый товар при покупке, идет отдельный объектом
+            Поэтому сделал логику объединения товаров если разница во времени покупки меньше 4 минут 
+            */
+            const sameOrder = acc.find((innerItem: IOrderItem) =>
+              compareDateTimeOnOneOrder(innerItem.buy_date, item.buy_date)
             );
-            if (existing) {
-              existing.item_id = Array.isArray(existing.item_id)
-                ? existing.item_id
-                : [existing.item_id];
-              existing.item_id.push(item.item_id as string);
+            if (sameOrder) {
+              sameOrder.item_id = Array.isArray(sameOrder.item_id)
+                ? sameOrder.item_id
+                : [sameOrder.item_id];
+              sameOrder.item_id.push(item.item_id as string);
             } else {
               acc.push(item);
             }
-            return acc.reverse();
+            return acc;
           },
           []
         );

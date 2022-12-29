@@ -24,22 +24,50 @@ const productImage = computed(
 const displayAdditionalItems = computed(() => props.product.mock);
 </script>
 <template>
-  <div class="profile-order-item__wrapper">
+  <div class="profile-order-item">
     <div v-if="displayAdditionalItems" class="profile-order-item__additional">
-      <q-icon :name="ionAddOutline" size="36px" />
+      <q-icon :name="ionAddOutline" size="36px" color="white" />
     </div>
-    <div v-else class="profile-order-item">
-      <div class="profile-order-item__image">
+    <div v-else class="profile-order-item__inner">
+      <div class="profile-order-item__inner-image">
         <q-img :src="productImage" :ratio="1" />
       </div>
-      <div class="profile-order-item__title">
-        {{ productTitleTruncate }}
+      <div class="profile-order-item__inner-quantity">
+        x{{ product.quantity }}
       </div>
-      <div class="product-order-item__quantity">x{{ product.quantity }}</div>
     </div>
   </div>
 </template>
 <style lang="scss">
 .profile-order-item {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  padding: 5px 10px;
+  &__additional {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.555);
+  }
+  &__inner {
+    position: relative;
+    &-quantity {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.555);
+    }
+  }
 }
 </style>
