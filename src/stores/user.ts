@@ -2,7 +2,11 @@ import { defineStore } from "pinia";
 import BaseApi from "@/api/BaseApi";
 import type { IProfileData, IAuthData } from "@/typings/profile";
 import type { IOrderItem } from "@/typings/product";
-import { compareDateTimeOnOneOrder } from "@/helpers";
+import {
+  convertISODateToString,
+  countDuplicates,
+  compareDateTimeOnOneOrder,
+} from "@/helpers";
 import { Cookies } from "quasar";
 
 //* using option store syntax
@@ -57,8 +61,8 @@ export const useUser = defineStore("user", {
         const { data } = await BaseApi.get(
           `api/get_buys?limit=50&offset=0&user_id=1`
         );
-        this.profileOrders = data.buys.reduce(
-          (acc: IOrderItem[], item: IOrderItem) => {
+        this.profileOrders = data.buys
+          .reduce((acc: IOrderItem[], item: IOrderItem) => {
             /* костыль
             На беке каждый товар при покупке, идет отдельный объектом
             Поэтому сделал логику объединения товаров если разница во времени покупки меньше 4 минут 
@@ -75,9 +79,13 @@ export const useUser = defineStore("user", {
               acc.push(item);
             }
             return acc;
-          },
-          []
-        );
+          }, [])
+          .map((s: IOrderItem) => ({
+            ...s,
+            date: convertISODateToString(s.buy_date),
+            products: countDuplicates(s.item_id),
+          }))
+          .reverse();
       } catch (e) {
         console.log(e);
       }

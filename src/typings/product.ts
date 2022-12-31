@@ -24,10 +24,17 @@ export interface IBasketItem {
   quantity: number;
 }
 
+export interface IOrderItemProducts {
+  id: string;
+  quantity: string;
+}
+
 export interface IOrderItem {
   id: string;
   buy_date: string;
   user_id: string;
   item_id: string | string[];
   card_id: string;
+  products?: IOrderItemProducts[];
+  date?: string;
 }

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { convertISODateToString, addMockObjectToArray } from "@/helpers";
+import { addMockObjectToArray } from "@/helpers";
 import ProfileOrderItem from "@/components/profile/ProfileOrderItem.vue";
 
 const props = defineProps({
@@ -12,16 +12,6 @@ const props = defineProps({
 
 const router = useRouter();
 
-const orderItems = computed(() =>
-  props.orders
-    .map((s) => ({
-      ...s,
-      date: convertISODateToString(s.buy_date),
-      products: addMockObjectToArray(s.item_id),
-    }))
-    .reverse()
-);
-
 const goToOrderDetails = (id) => {
   router.push({
     name: "profile-order-details",
@@ -31,12 +21,19 @@ const goToOrderDetails = (id) => {
     },
   });
 };
+
+const displayOrders = computed(() => {
+  return props.orders.map((s) => ({
+    ...s,
+    products: addMockObjectToArray(s.products),
+  }));
+});
 </script>
 <template>
   <div class="profile-order-history">
     <div
       class="profile-order-history__item"
-      v-for="item in orderItems"
+      v-for="item in displayOrders"
       :key="item.id"
       @click="goToOrderDetails(item.id)"
     >
