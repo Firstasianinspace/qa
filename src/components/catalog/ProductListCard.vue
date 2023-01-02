@@ -6,9 +6,9 @@ import {
   ionCartOutline,
   ionHeartOutline,
   ionHeart,
-  ionCheckmark,
 } from "@quasar/extras/ionicons-v6";
 import BasePrice from "@/components/common/BasePrice.vue";
+import BaseCounter from "@/components/common/BaseCounter.vue";
 const NOIMAGE_URL = "/img/noimg.png";
 
 const props = defineProps({
@@ -24,13 +24,16 @@ const {
   removeProductFromBasket,
   addProductToFavorites,
   removeProductFromFavorites,
+  changeQuantity,
 } = basketStore;
-const { basketProducts, favoriteProducts } = storeToRefs(basketStore);
+const { basketProducts, basketProductIds, favoriteProducts } =
+  storeToRefs(basketStore);
 const isFavoriteProduct = computed(() =>
   favoriteProducts.value.includes(props.product)
 );
+
 const isAddedProduct = computed(() =>
-  basketProducts.value.includes(props.product)
+  basketProductIds.value.includes(props.product.item_id)
 );
 
 const toggleFavorite = (product) => {
@@ -41,12 +44,8 @@ const toggleFavorite = (product) => {
   }
 };
 
-const toggleProduct = (product) => {
-  if (isAddedProduct.value) {
-    removeProductFromBasket(product);
-  } else {
-    addProductToBasket(product);
-  }
+const addProduct = (product) => {
+  addProductToBasket(product);
 };
 
 const name = computed(() => props.product?.title);
@@ -57,18 +56,27 @@ const productPrice = computed(() => props.product?.price);
 const productDiscountPrice = computed(() => props.product?.discount_price || 0);
 const productBrand = computed(() => props.product?.brand);
 
+const productQuantity = computed(() => {
+  let quantity = null;
+  for (const item of basketProducts.value) {
+    if (item.item_id === props.product.item_id) {
+      quantity = item.quantity;
+    }
+  }
+  return quantity;
+});
+
+const displayCounter = computed(() => isAddedProduct.value);
+
+const updateProductQuantity = (value) => {
+  if (value === 0) {
+    removeProductFromBasket(props.product);
+  }
+  changeQuantity(props.product.item_id, value);
+};
+
 const dynamicIcon = computed(() =>
   isFavoriteProduct.value ? ionHeart : ionHeartOutline
-);
-
-const dynamicButtonIcon = computed(() =>
-  isAddedProduct.value ? ionCheckmark : ionCartOutline
-);
-const dynamicButtonLabel = computed(() =>
-  isAddedProduct.value ? "Added to Bag" : "Add to bag"
-);
-const dynamicButtonClass = computed(() =>
-  isAddedProduct.value ? "button-white" : "button-black"
 );
 </script>
 <template>
@@ -96,12 +104,18 @@ const dynamicButtonClass = computed(() =>
           :discount-price="productDiscountPrice"
         />
       </div>
-      <div class="product-list-card__body-btn">
+      <div class="product-list-card__footer">
+        <BaseCounter
+          v-if="displayCounter"
+          :quantity="productQuantity"
+          @changeQuantity="updateProductQuantity"
+        />
         <q-btn
-          :class="dynamicButtonClass"
-          :icon="dynamicButtonIcon"
-          :label="dynamicButtonLabel"
-          @click="toggleProduct(product)"
+          v-else
+          class="button-black"
+          :icon="ionCartOutline"
+          label="Add to bag"
+          @click="addProduct(product)"
         />
       </div>
     </div>

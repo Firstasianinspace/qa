@@ -65,9 +65,35 @@ const updateProductQuantity = (value) => {
     </div>
   </div>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
 .basket-product__item {
   display: grid;
   grid-template-columns: 1fr 3fr;
+  gap: 10px;
+  margin: 0 0 15px 0;
+  &-body {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 1fr 1fr;
+    &__title {
+      grid-column: 1 / 3;
+    }
+    &__brand {
+      grid-column: 1 / 3;
+      grid-row: 2 / 2;
+    }
+    &__price {
+      grid-column: 1 / 1;
+      grid-row: 3 / 3;
+      & .base-price {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    &__count {
+      grid-column: 2 / 2;
+      grid-row: 3 / 3;
+    }
+  }
 }
 </style>
