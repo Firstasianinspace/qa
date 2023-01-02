@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useCatalog } from "@/stores/catalog";
 import CatalogLayout from "@/layouts/CatalogLayout.vue";
@@ -78,6 +78,26 @@ const setMaximum = (value) => {
   maxPriceRange.value = parseInt(value);
 };
 
+const page = ref(1);
+const perPage = 9;
+
+const paginatedData = computed(() =>
+  filteredProductsRange.value.slice(
+    (page.value - 1) * perPage,
+    page.value * perPage
+  )
+);
+
+const maxPage = computed(() =>
+  Math.ceil(filteredProductsRange.value.length / perPage)
+);
+
+const displayPagination = computed(() => maxPage.value > 1);
+
+watch(filteredProductsRange, () => {
+  page.value = 1;
+});
+
 onMounted(() => {
   getProducts();
   getCategories();
@@ -92,14 +112,22 @@ onMounted(() => {
   <div class="page catalog-page container">
     <div class="catalog-wrapper">
       <CatalogSort :product-count="filteredProductsRangeCount" />
-      <CatalogLayout>
-        <component
-          :is="catalogCardComponent"
-          v-for="product in filteredProductsRange"
-          :key="product.item_id"
-          :product="product"
-        />
-      </CatalogLayout>
+      <div class="catalog-content">
+        <CatalogLayout>
+          <component
+            :is="catalogCardComponent"
+            v-for="product in paginatedData"
+            :key="product.item_id"
+            :product="product"
+          />
+        </CatalogLayout>
+        <q-pagination
+          v-if="displayPagination"
+          v-model="page"
+          :max="maxPage"
+          color="dark"
+        ></q-pagination>
+      </div>
       <CatalogSideBar
         @update="checkBoxes"
         @updateRange="setRangeSlider"
@@ -129,5 +157,9 @@ onMounted(() => {
     grid-column: 1 / 1;
     grid-row: 2 / 4;
   }
+}
+
+.q-pagination {
+  margin: 15px 0;
 }
 </style>
